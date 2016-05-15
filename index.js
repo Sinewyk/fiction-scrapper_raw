@@ -38,6 +38,8 @@ function* _main(uri, options) { // eslint-disable-line spaced-comment
         // inspect results, if all not empty => continue, if one or more is empty => mean we reached end of line =D
         const currentContents = yield nullFiltered.map(hostConfig.getChapterContent);
         contents = currentContents.reduce((prev, content) => prev + chapterTemplate({content}), contents); // eslint-disable-line no-loop-func
+        // @FIXME (sinewyk): good time for progress tracking ... use Observables instead of Promises
+        console.log(`Progress on ${uri}, around chapter ${currentChapter - 1}`);
         if (results.length !== nullFiltered.length) {
             break;
         }
