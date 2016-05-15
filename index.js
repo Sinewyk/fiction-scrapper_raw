@@ -17,7 +17,6 @@ function* _main(uri/*, options */) {
     let currentChapter = 1;
 
     const chapter = chapterTemplate({
-        number: currentChapter,
         content: yield hostConfig.getChapterUri(uri, currentChapter)
             .then(fetcher)
             .then(hostConfig.getChapterContent),

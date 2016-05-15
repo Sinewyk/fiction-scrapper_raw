@@ -11,7 +11,6 @@ module.exports = ({
     category = '',
 }) => {
     assert(title);
-    assert(author);
 
     return `<div>
     <div>Story: ${title}</div>
