@@ -44,7 +44,7 @@ function* _main(uri/*, options */) { // eslint-disable-line spaced-comment
 
     const filename = `${infos.title}${infos.book ? ` - Book ${infos.book}` : ''}.html`;
     yield writer(filename, contents);
-
+    console.log(`Output written to ${filename}`);
     return filename;
 }
 
@@ -53,11 +53,3 @@ function main(...options) {
 }
 
 module.exports = main;
-
-// debug, link this to command cli later ...
-main('https://www.wuxiaworld.com/tdg-index/tdg-chapter-1')
-.then(filename => console.log(`Output written to ${filename}`))
-.catch(err => {
-    console.error(err);
-    process.exit(1);
-});

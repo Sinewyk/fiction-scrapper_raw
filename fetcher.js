@@ -4,8 +4,9 @@ const Promise = require('bluebird');
 module.exports = function(uri) {
     return new Promise((resolve, reject) => {
         request.get(uri).timeout(15000).end((err, res) => {
-            // resolving to null, it's not an error, it's that we have to stop =D
-            // will probably have to move this in host config later :o ...
+            // return null if we have to stop
+            // algorithm is kind of try to fetch more, if we hit a snag, just stop, it's not really an error
+            // @TODO (sinewyk): finish handling the book step thing for wuxian ? how to handle these ?
             if (err && err.status === 404) {
                 return resolve(null);
             }
