@@ -9,21 +9,34 @@ const chapterTemplate = require('./templates/chapter');
 const fetcher = require('./fetcher');
 const writer = require('./writer');
 const co = require('co');
+const async = require('bluebird').promisifyAll(require('async'));
 
-function* _main(uri/*, options */) {
+// tweak this via command line between 3-8
+// with a message concerning open sockets & shit
+const LIMIT = 5;
+
+function* _main(uri/*, options */) { // eslint-disable-line spaced-comment
     const hostConfig = yield getHostConfig(uri);
     const infos = yield hostConfig.getInfos(uri);
     let contents = headTemplate(infos);
     let currentChapter = 1;
 
-    const chapter = chapterTemplate({
-        content: yield hostConfig.getChapterUri(uri, currentChapter)
-            .then(fetcher)
-            .then(hostConfig.getChapterContent),
-    });
-    contents += chapter;
-
-    currentChapter++;
+    while (true) { // eslint-disable-line no-constant-condition
+        const urisP = [];
+        for (; currentChapter <= LIMIT; ++currentChapter) {
+            urisP.push(hostConfig.getChapterUri(uri, currentChapter));
+        }
+        const uris = yield urisP;
+        const tasksArray = uris.map(_uri => callback => { // eslint-disable-line no-loop-func
+            fetcher(_uri)
+            .then(val => callback(null, val))
+            .catch(err => callback(err));
+        });
+        const results = yield async.parallelAsync(tasksArray);
+        // inspect results, if all not empty => continue, if one or more is empty => mean we reached end of line =D
+        const currentContents = yield results.map(hostConfig.getChapterContent);
+        contents = currentContents.reduce((prev, content) => prev + chapterTemplate({content}), contents); // eslint-disable-line no-loop-func
+    }
 
     const filename = `${infos.title}${infos.book ? ` - Book ${infos.book}` : ''}.html`;
     yield writer(filename, contents);
