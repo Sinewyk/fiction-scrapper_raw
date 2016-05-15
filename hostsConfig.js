@@ -3,6 +3,13 @@ const url = require('url');
 const _ = require('lodash');
 const cheerio = require('cheerio');
 
+// non immutable method
+// strip a and script tags
+const defaultFilter = root => {
+    root.find('a').remove();
+    root.find('script').remove();
+};
+
 const _supportedHosts = [{
     host: 'www.wuxiaworld.com',
     https: true,
@@ -13,7 +20,8 @@ const _supportedHosts = [{
     }),
     getChapterContent: html => new Promise(resolve => {
         const root = cheerio.load(html).root();
-        resolve(root.find('.entry-content'));
+        defaultFilter(root);
+        resolve(root.find('.entry-content').toString());
     }),
     getInfos: uri => new Promise(resolve => {
         const infos = {

@@ -9,14 +9,6 @@ const chapterTemplate = require('./templates/chapter');
 const fetcher = require('./fetcher');
 const writer = require('./writer');
 const co = require('co');
-const tap = val => console.log(val);
-
-/*
-fetcher(URI).then(contents => console.log(contents)).catch(err => console.error(err));
-writer('test.html', contents).catch(err => {
-throw err;
-});
-*/
 
 function* _main(uri/*, options */) {
     const hostConfig = yield getHostConfig(uri);
@@ -36,6 +28,8 @@ function* _main(uri/*, options */) {
 
     const filename = `${infos.title}${infos.book ? ` - Book ${infos.book}` : ''}.html`;
     yield writer(filename, contents);
+
+    return filename;
 }
 
 function main(...options) {
@@ -45,8 +39,8 @@ function main(...options) {
 module.exports = main;
 
 // debug, link this to command cli later ...
-main('https://www.wuxiaworld.com/master-index/dkwss-chapter-1/')
-.then(tap)
+main('https://www.wuxiaworld.com/tdg-index/tdg-chapter-1')
+.then(filename => console.log(`Output written to ${filename}`))
 .catch(err => {
     console.error(err);
     process.exit(1);

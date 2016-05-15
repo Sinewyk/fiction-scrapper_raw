@@ -5,8 +5,11 @@ module.exports = ({
     name,
     content,
 }) => {
-    assert(number);
     assert(content);
+
+    if (!number) {
+        return content;
+    }
 
     return `<h1>Chapter ${number}${name ? `: ${name}` : ''}</h1>${content}<br>`;
 };
