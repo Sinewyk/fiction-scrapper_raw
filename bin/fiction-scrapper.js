@@ -7,7 +7,7 @@ const pkg = require('../package.json');
 const fictionScrapper = require('../');
 
 function exit(err) {
-    console.err(err);
+    console.error(err);
     process.exit(1);
 }
 
