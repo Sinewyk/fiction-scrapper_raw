@@ -25,11 +25,7 @@ describe('chapterTemplate', function() {
         }), 'trololol');
     });
 
-    it('throws if no content', function(done) {
-        try {
-            chapterTemplate();
-        } catch (e) {
-            done();
-        }
+    it('returns empty string if no content', function() {
+        assert.equal(chapterTemplate({}), '');
     });
 });

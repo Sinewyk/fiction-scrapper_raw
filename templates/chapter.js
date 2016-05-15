@@ -1,11 +1,11 @@
-const assert = require('assert');
-
 module.exports = ({
     number,
     name,
     content,
 }) => {
-    assert(content);
+    if (!content) {
+        return '';
+    }
 
     if (!number) {
         return content;

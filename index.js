@@ -19,11 +19,11 @@ function* _main(uri/*, options */) { // eslint-disable-line spaced-comment
     const hostConfig = yield getHostConfig(uri);
     const infos = yield hostConfig.getInfos(uri);
     let contents = headTemplate(infos);
-    let currentChapter = 1;
+    let currentChapter = 316;
 
     while (true) { // eslint-disable-line no-constant-condition
         const urisP = [];
-        for (; currentChapter <= LIMIT; ++currentChapter) {
+        for (let i = 0; i < LIMIT; ++currentChapter, ++i) {
             urisP.push(hostConfig.getChapterUri(uri, currentChapter));
         }
         const uris = yield urisP;
@@ -33,9 +33,13 @@ function* _main(uri/*, options */) { // eslint-disable-line spaced-comment
             .catch(err => callback(err));
         });
         const results = yield async.parallelAsync(tasksArray);
+        const nullFiltered = results.filter(res => res !== null);
         // inspect results, if all not empty => continue, if one or more is empty => mean we reached end of line =D
-        const currentContents = yield results.map(hostConfig.getChapterContent);
+        const currentContents = yield nullFiltered.map(hostConfig.getChapterContent);
         contents = currentContents.reduce((prev, content) => prev + chapterTemplate({content}), contents); // eslint-disable-line no-loop-func
+        if (results.length !== nullFiltered.length) {
+            break;
+        }
     }
 
     const filename = `${infos.title}${infos.book ? ` - Book ${infos.book}` : ''}.html`;
