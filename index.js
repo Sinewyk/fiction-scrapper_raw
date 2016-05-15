@@ -19,7 +19,7 @@ function* _main(uri/*, options */) { // eslint-disable-line spaced-comment
     const hostConfig = yield getHostConfig(uri);
     const infos = yield hostConfig.getInfos(uri);
     let contents = headTemplate(infos);
-    let currentChapter = 316;
+    let currentChapter = 1;
 
     while (true) { // eslint-disable-line no-constant-condition
         const urisP = [];
