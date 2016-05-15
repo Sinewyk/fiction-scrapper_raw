@@ -16,6 +16,7 @@ program
     .description('Scrap a fiction')
     .arguments('[uris...]')
     .option('-t, --title [title]', 'Personalize title')
+    .option('-l, --limit <n>', '# of requests in parallel, defaults to 5', parseInt)
     .action((uris, options) => {
         uris.forEach(uri => {
             fictionScrapper(uri, options)

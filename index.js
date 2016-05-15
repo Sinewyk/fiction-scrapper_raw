@@ -11,19 +11,20 @@ const writer = require('./writer');
 const co = require('co');
 const async = require('bluebird').promisifyAll(require('async'));
 
-// tweak this via command line between 3-8
-// with a message concerning open sockets & shit
-const LIMIT = 5;
-
-function* _main(uri/*, options */) { // eslint-disable-line spaced-comment
+function* _main(uri, options) { // eslint-disable-line spaced-comment
+    const limit = options.limit || 5;
     const hostConfig = yield getHostConfig(uri);
     const infos = yield hostConfig.getInfos(uri);
+
+    // override some stuff to just not worry too much about meta data when we don't want to
+    infos.title = infos.title || options.title;
+
     let contents = headTemplate(infos);
     let currentChapter = 1;
 
     while (true) { // eslint-disable-line no-constant-condition
         const urisP = [];
-        for (let i = 0; i < LIMIT; ++currentChapter, ++i) {
+        for (let i = 0; i < limit; ++currentChapter, ++i) {
             urisP.push(hostConfig.getChapterUri(uri, currentChapter));
         }
         const uris = yield urisP;
