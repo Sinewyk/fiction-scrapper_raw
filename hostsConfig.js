@@ -1,6 +1,7 @@
 const Promise = require('bluebird');
 const url = require('url');
 const _ = require('lodash');
+const cheerio = require('cheerio');
 
 const _supportedHosts = [{
     host: 'www.wuxiaworld.com',
@@ -9,6 +10,10 @@ const _supportedHosts = [{
     description: `You need to directly send a uri to a chapter and we'll do the rest`,
     getChapterUri: (uri, neededChapter) => new Promise(resolve => {
         return resolve(uri.split('-').slice(0, -1).concat(neededChapter).join('-'));
+    }),
+    getChapterContent: html => new Promise(resolve => {
+        const root = cheerio.load(html).root();
+        resolve(root.find('.entry-content'));
     }),
     getInfos: uri => new Promise(resolve => {
         const infos = {

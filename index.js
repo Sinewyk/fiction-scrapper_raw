@@ -5,8 +5,9 @@ require('any-promise/register/bluebird');
 const hostsConfig = require('./hostsConfig');
 const getHostConfig = hostsConfig.getHostConfig;
 const headTemplate = require('./templates/head');
-// const fetcher = require('./fetcher');
-// const writer = require('./writer');
+const chapterTemplate = require('./templates/chapter');
+const fetcher = require('./fetcher');
+const writer = require('./writer');
 const co = require('co');
 const tap = val => console.log(val);
 
@@ -21,17 +22,20 @@ function* _main(uri/*, options */) {
     const hostConfig = yield getHostConfig(uri);
     const infos = yield hostConfig.getInfos(uri);
     let contents = headTemplate(infos);
+    let currentChapter = 1;
 
-    // fetch chapters and concatenate them into contents ... at the hand to avoid GC trashing ?
+    const chapter = chapterTemplate({
+        number: currentChapter,
+        content: yield hostConfig.getChapterUri(uri, currentChapter)
+            .then(fetcher)
+            .then(hostConfig.getChapterContent),
+    });
+    contents += chapter;
 
-    return contents;
-    /*
-    let fileName = infos.title;
-    if (infos.book) {
-        fileName += ` - Book ${infos.book}`;
-    }
-    yield writer(fileName, contents);
-    */
+    currentChapter++;
+
+    const filename = `${infos.title}${infos.book ? ` - Book ${infos.book}` : ''}.html`;
+    yield writer(filename, contents);
 }
 
 function main(...options) {
