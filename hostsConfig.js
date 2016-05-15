@@ -44,6 +44,6 @@ const getHostConfig = (uri, supportedHosts = _supportedHosts) => new Promise((re
     if (found) {
         return resolve(found);
     }
-    return reject(new Error('Host not supported'));
+    return reject(new Error(`Host not supported "${uri}"`));
 });
 exports.getHostConfig = getHostConfig;
