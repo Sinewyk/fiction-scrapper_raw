@@ -37,6 +37,9 @@ const getHostConfig = (uri, supportedHosts = _supportedHosts) => new Promise((re
     const match = {
         host: parsedUri.host,
     };
+    if (!parsedUri.protocol) {
+        return reject(new Error(`No protocol`));
+    }
     if (parsedUri.protocol === 'https:') {
         match.https = true;
     }

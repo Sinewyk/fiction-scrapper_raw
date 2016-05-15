@@ -1,5 +1,3 @@
-/* eslint no-console: 0, no-process-exit: 0 */
-
 require('any-promise/register/bluebird');
 
 const hostsConfig = require('./hostsConfig');
@@ -39,7 +37,7 @@ function* _main(uri, options) { // eslint-disable-line spaced-comment
         const currentContents = yield nullFiltered.map(hostConfig.getChapterContent);
         contents = currentContents.reduce((prev, content) => prev + chapterTemplate({content}), contents); // eslint-disable-line no-loop-func
         // @FIXME (sinewyk): good time for progress tracking ... use Observables instead of Promises
-        console.log(`Progress on ${uri}, around chapter ${currentChapter - 1}`);
+        console.log(`Progress on ${uri}, around chapter ${currentChapter - 1}`); // eslint-disable-line no-console
         if (results.length !== nullFiltered.length) {
             break;
         }
@@ -47,7 +45,7 @@ function* _main(uri, options) { // eslint-disable-line spaced-comment
 
     const filename = `${infos.title}${infos.book ? ` - Book ${infos.book}` : ''}.html`;
     yield writer(filename, contents);
-    console.log(`Output written to ${filename}`);
+    console.log(`Output written to ${filename}`); // eslint-disable-line no-console
     return filename;
 }
 
