@@ -15,7 +15,9 @@ function* _main(uri, options) { // eslint-disable-line spaced-comment
     const infos = yield hostConfig.getInfos(uri);
 
     // override some stuff to just not worry too much about meta data when we don't want to
-    infos.title = infos.title || options.title;
+    if (options.title) {
+        infos.title = options.title;
+    }
 
     let contents = headerTemplate(infos);
     let currentChapter = 1;

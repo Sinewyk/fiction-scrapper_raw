@@ -15,9 +15,15 @@ program
     .version(pkg.version)
     .description('Scrap a fiction')
     .arguments('[uris...]')
-    .option('-t, --title [title]', 'Personalize title')
+    .option('-t, --title [title]', 'Personalize title, restricted to one uri')
     .option('-l, --limit <n>', '# of requests in parallel, defaults to 5', parseInt)
     .action((uris, options) => {
+        // restrict usage of --title and multiple uris ...
+        if (uris.length > 1
+            && options.title
+        ) {
+            return program.help();
+        }
         uris.forEach(uri => {
             fictionScrapper(uri, options)
             .catch(err => exit(err));
