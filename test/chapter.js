@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 
-const chapterTemplate = require('../templates/chapter');
+const chapterTemplate = require('../chapterTemplate');
 const assert = require('power-assert');
 
 describe('chapterTemplate', function() {

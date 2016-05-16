@@ -2,8 +2,8 @@ require('any-promise/register/bluebird');
 
 const hostsConfig = require('./hostsConfig');
 const getHostConfig = hostsConfig.getHostConfig;
-const headTemplate = require('./templates/head');
-const chapterTemplate = require('./templates/chapter');
+const headerTemplate = require('./headerTemplate');
+const chapterTemplate = require('./chapterTemplate');
 const fetcher = require('./fetcher');
 const writer = require('./writer');
 const co = require('co');
@@ -17,7 +17,7 @@ function* _main(uri, options) { // eslint-disable-line spaced-comment
     // override some stuff to just not worry too much about meta data when we don't want to
     infos.title = infos.title || options.title;
 
-    let contents = headTemplate(infos);
+    let contents = headerTemplate(infos);
     let currentChapter = 1;
 
     while (true) { // eslint-disable-line no-constant-condition
