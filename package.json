@@ -1,7 +1,7 @@
 {
   "name": "fiction-scrapper",
   "version": "0.1.0",
-  "description": "Trying to download stuff as html",
+  "description": "Scrap stuff as html",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require intelli-espower-loader --require co-mocha"
