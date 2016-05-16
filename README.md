@@ -13,8 +13,8 @@ Not yet on npm =D. You can make do by cloning this and stuff if you have the kno
   * Almost all the others are easy
   
 # Tech todo:
-Explode host config, one host per file,
-A bit more type for those parser stuff
-As always, started Promise based, so ... I can't keep track of the progress ... need to switch to Observables.
-File input.
-Implement the "whatever" filter so that I can do "whatever" I want before starting to download (pass through an age barrier or username/password attacher to following requests ?)
+  * As always, started Promise based, so ... I can't keep track of the progress ... need to switch to Observables.
+  * Explode host config, one host per file,
+  * A bit more type for those parser stuff
+  * File input.
+  * Implement the "whatever" filter so that I can do "whatever" I want before starting to download (pass through an age barrier or username/password attacher to following requests ?)
