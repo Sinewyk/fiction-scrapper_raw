@@ -4,9 +4,13 @@ const _ = require('lodash');
 const cheerio = require('cheerio');
 
 // non immutable method
-// strip a and script tags
+// replace a with span and strip script tags
 const defaultFilter = root => {
-    root.find('a').remove();
+    root.find('a').each(function() {
+        const $this = cheerio(this);
+        const innerHtml = $this.html();
+        $this.replaceWith(`<span>${innerHtml}</span>`);
+    });
     root.find('script').remove();
 };
 
