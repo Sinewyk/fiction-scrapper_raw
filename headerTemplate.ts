@@ -1,4 +1,4 @@
-const assert = require('assert');
+import * as assert from 'assert';
 
 // const dateFormat = 'dddd D MMMM YYYY'
 
@@ -21,7 +21,3 @@ module.exports = ({
     <div>Category: ${category}</div>
 </div>`;
 };
-
-// <div>{t.sprintf(t.ngettext('Chapter : %d', 'Chapters : %d',$ chaptersCount),$ chaptersCount)}</div>
-// <div>Published: ${moment$(published).format(dateFormat)}</div>
-// <div>Last updated: ${moment$(lastUpdated).format(dateFormat)}</div>

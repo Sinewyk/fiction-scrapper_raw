@@ -1,7 +1,6 @@
 require('any-promise/register/bluebird');
 
-const hostsConfig = require('./hostsConfig');
-const getHostConfig = hostsConfig.getHostConfig;
+import {getHostConfig} from './hostsConfig';
 const headerTemplate = require('./headerTemplate');
 const chapterTemplate = require('./chapterTemplate');
 const fetcher = require('./fetcher');
