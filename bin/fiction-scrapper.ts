@@ -3,8 +3,8 @@
 /* eslint no-process-exit: 0, no-console: 0 */
 
 const program = require('commander');
-const pkg = require('../package.json');
-const fictionScrapper = require('../');
+const pkg = require('../../package.json');
+import fictionScrapper from '../src/';
 
 function exit(err) {
     console.error(err);

@@ -1,8 +1,12 @@
 {
   "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160709114037"
+    "commander": "registry:dt/commander#2.3.0+20160317120654",
+    "node": "registry:dt/node#6.0.0+20160709114037",
+    "superagent": "registry:dt/superagent#1.4.0+20160317120654"
   },
   "dependencies": {
-    "cheerio": "registry:npm/cheerio#0.20.0+20160422172414"
+    "bluebird": "registry:npm/bluebird#3.3.4+20160622205516",
+    "cheerio": "registry:npm/cheerio#0.20.0+20160422172414",
+    "lodash": "registry:npm/lodash#4.0.0+20160701205107"
   }
 }

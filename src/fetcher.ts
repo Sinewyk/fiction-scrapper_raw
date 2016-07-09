@@ -1,8 +1,8 @@
-const request = require('superagent');
-const Promise = require('bluebird');
+import * as request from 'superagent';
+import * as Promise from 'bluebird';
 
-module.exports = function(uri) {
-    return new Promise((resolve, reject) => {
+export default function(uri) {
+    return new Promise<any>((resolve, reject) => {
         request.get(uri).timeout(15000).end((err, res) => {
             // return null if we have to stop
             // algorithm is kind of try to fetch more, if we hit a snag, just stop, it's not really an error

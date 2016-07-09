@@ -1,14 +1,14 @@
-require('any-promise/register/bluebird');
+import 'any-promise/register/bluebird';
 
 import {getHostConfig} from './hostsConfig';
 const headerTemplate = require('./headerTemplate');
 const chapterTemplate = require('./chapterTemplate');
-const fetcher = require('./fetcher');
+import fetcher from './fetcher';
 const writer = require('./writer');
-const co = require('co');
+import {wrap} from 'co';
 const async = require('bluebird').promisifyAll(require('async'));
 
-function* _main(uri, options) { // eslint-disable-line spaced-comment
+function* _main(uri: string, options: any = {}) { // eslint-disable-line spaced-comment
     const limit = options.limit || 5;
     const hostConfig = yield getHostConfig(uri);
     const infos = yield hostConfig.getInfos(uri);
@@ -50,8 +50,6 @@ function* _main(uri, options) { // eslint-disable-line spaced-comment
     return filename;
 }
 
-function main(...options) {
-    return co.wrap(_main)(...options);
+export default function main(...options) {
+    return wrap(_main)(...options);
 }
-
-module.exports = main;

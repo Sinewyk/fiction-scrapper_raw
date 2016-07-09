@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
-const url = require('url');
-const _ = require('lodash');
+import * as url from 'url';
+import {find} from 'lodash';
 import {load} from 'cheerio';
 
 // non immutable method
@@ -24,8 +24,8 @@ interface HostConfig {
     getInfos: Function;
 }
 
-interface HostInfos {
-    title: string;
+type HostInfos = {
+    title: string
 }
 
 const _supportedHosts: Array<HostConfig> = [{
@@ -61,7 +61,7 @@ const getHostConfig = (uri, supportedHosts = _supportedHosts) => new Promise((re
     if (parsedUri.protocol === 'https:') {
         match.https = true;
     }
-    const found = _.find(supportedHosts, match);
+    const found = find(supportedHosts, match);
     if (found) {
         return resolve(found);
     }
