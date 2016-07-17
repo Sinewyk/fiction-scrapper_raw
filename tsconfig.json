@@ -8,12 +8,15 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "declaration": false,
-        "noImplicitAny": false,
-        "noImplicitUseStrict": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
         "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitUseStrict": true,
+        "noImplicitReturns": true,
+        //"noUnusedParameters": true,
+        "noUnusedLocals": true,
         "outDir": "./build"
     },
     "exclude": [

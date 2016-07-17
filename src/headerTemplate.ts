@@ -1,6 +1,14 @@
 import * as assert from 'assert';
 
 // const dateFormat = 'dddd D MMMM YYYY'
+interface Header {
+    title: string
+    author: string
+    status: string
+    summary: string
+    genre: string
+    category: string
+}
 
 module.exports = ({
     title,
@@ -9,7 +17,7 @@ module.exports = ({
     summary = '',
     genre = '',
     category = '',
-}) => {
+}: Header): string => {
     assert(title);
 
     return `<div>

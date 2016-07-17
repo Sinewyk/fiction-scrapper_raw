@@ -1,31 +1,32 @@
-const Promise = require('bluebird');
+import * as Promise from 'bluebird';
 import * as url from 'url';
 import {find} from 'lodash';
-import {load} from 'cheerio';
+import * as cheerio from 'cheerio';
 
 // non immutable method
 // replace a with span and strip script tags
-function defaultFilter(root): void {
+function defaultFilter(root: cheerio.Cheerio) {
     root.find('a').each(function() {
-        const $this = load(this).root();
+        const $this = cheerio.load(this).root();
         const innerHtml = $this.html();
         $this.replaceWith(`<span>${innerHtml}</span>`);
     });
     root.find('script').remove();
 };
 
-interface HostConfig {
+export interface HostConfig {
     host: string;
     https: boolean;
     test: RegExp;
     description: string;
     getChapterUri: Function;
-    getChapterContent: Function;
+    getChapterContent: (html: string) => Promise<string>;
     getInfos: Function;
 }
 
-type HostInfos = {
-    title: string
+export interface HostInfos {
+    title?: string
+    book?: number
 }
 
 const _supportedHosts: Array<HostConfig> = [{
@@ -33,33 +34,33 @@ const _supportedHosts: Array<HostConfig> = [{
     https: true,
     test: /chapter/,
     description: `You need to directly send a uri to a chapter and we'll do the rest`,
-    getChapterUri: (uri: string, neededChapter: number) => new Promise(resolve => {
+    getChapterUri: (uri: string, neededChapter: number) => new Promise<string>(resolve => {
         return resolve(uri.split('-').slice(0, -1).concat(neededChapter.toString()).join('-'));
     }),
-    getChapterContent(html: string): Promise<string> {
-        return new Promise(resolve => {
-            const root = load(html).root();
+    getChapterContent(html: string) {
+        return new Promise<string>(resolve => {
+            const root = cheerio.load(html).root();
             defaultFilter(root);
             resolve(root.find('.entry-content').toString());
     })},
-    getInfos: (uri: string): Promise<HostInfos> => new Promise(resolve => {
+    getInfos: (uri: string) => new Promise<HostInfos>(resolve => {
+        const temp = uri.split('-chapter').shift();
+        const title = temp && temp.split('/').pop();
         const infos: HostInfos = {
-            title: uri.split('-chapter').shift().split('/').pop(),
+            title,
         };
         return resolve(infos);
     }),
 }];
 
-const getHostConfig = (uri, supportedHosts = _supportedHosts) => new Promise((resolve, reject) => {
+const getHostConfig = (uri: string, supportedHosts = _supportedHosts) => new Promise<HostConfig>((resolve, reject) => {
     const parsedUri = url.parse(uri);
     const match = {
         host: parsedUri.host,
+        https: parsedUri.protocol === 'https:',
     };
     if (!parsedUri.protocol) {
         return reject(new Error(`No protocol`));
-    }
-    if (parsedUri.protocol === 'https:') {
-        match.https = true;
     }
     const found = find(supportedHosts, match);
     if (found) {

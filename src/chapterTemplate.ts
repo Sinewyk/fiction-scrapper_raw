@@ -1,8 +1,14 @@
+interface Chapter {
+    number: number,
+    name: string,
+    content: string,
+}
+
 module.exports = ({
     number,
     name,
     content,
-}) => {
+}: Chapter) => {
     if (!content) {
         return '';
     }

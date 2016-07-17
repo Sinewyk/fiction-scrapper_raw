@@ -2,11 +2,11 @@
 
 /* eslint no-process-exit: 0, no-console: 0 */
 
-const program = require('commander');
+import * as program from 'commander';
 const pkg = require('../../package.json');
 import fictionScrapper from '../src/';
 
-function exit(err) {
+function exit(err: Error) {
     console.error(err);
     process.exit(1);
 }
@@ -17,7 +17,7 @@ program
     .arguments('[uris...]')
     .option('-t, --title [title]', 'Personalize title, restricted to one uri')
     .option('-l, --limit <n>', '# of requests in parallel, defaults to 5', parseInt)
-    .action((uris, options) => {
+    .action((uris: string[], options) => {
         // restrict usage of --title and multiple uris ...
         if (uris.length > 1
             && options.title

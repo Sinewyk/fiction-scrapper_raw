@@ -1,41 +1,44 @@
 import 'any-promise/register/bluebird';
 
-import {getHostConfig} from './hostsConfig';
+import {getHostConfig, HostConfig, HostInfos} from './hostsConfig';
 const headerTemplate = require('./headerTemplate');
 const chapterTemplate = require('./chapterTemplate');
 import fetcher from './fetcher';
-const writer = require('./writer');
+import writer from './writer';
 import {wrap} from 'co';
-const async = require('bluebird').promisifyAll(require('async'));
+import * as async from 'async';
+import * as Promise from 'bluebird';
+const Async = Promise.promisifyAll(async);
 
 function* _main(uri: string, options: any = {}) { // eslint-disable-line spaced-comment
     const limit = options.limit || 5;
-    const hostConfig = yield getHostConfig(uri);
-    const infos = yield hostConfig.getInfos(uri);
+    const hostConfig: HostConfig = yield getHostConfig(uri);
+    const infos: HostInfos = yield hostConfig.getInfos(uri);
 
     // override some stuff to just not worry too much about meta data when we don't want to
     if (options.title) {
         infos.title = options.title;
     }
 
-    let contents = headerTemplate(infos);
+    let contents: string = headerTemplate(infos);
     let currentChapter = 1;
 
     while (true) { // eslint-disable-line no-constant-condition
-        const urisP = [];
+        const urisP: Promise<string>[] = [];
         for (let i = 0; i < limit; ++currentChapter, ++i) {
             urisP.push(hostConfig.getChapterUri(uri, currentChapter));
         }
-        const uris = yield urisP;
-        const tasksArray = uris.map(_uri => callback => { // eslint-disable-line no-loop-func
-            fetcher(_uri)
-            .then(val => callback(null, val))
-            .catch(err => callback(err));
-        });
-        const results = yield async.parallelAsync(tasksArray);
-        const nullFiltered = results.filter(res => res !== null);
+        const uris: string[] = yield urisP;
+        const tasksArray = uris.map(
+            _uri => (callback: Function) => fetcher(_uri)
+                .then(val => callback(null, val))
+                .catch(err => callback(err))
+        );
+        const filterNull = (str: string): str is string => str !== null;
+        const results: Array<string | null> = yield Async.parallelAsync(tasksArray);
+        const nullFiltered = results.filter(filterNull);
         // inspect results, if all not empty => continue, if one or more is empty => mean we reached end of line =D
-        const currentContents = yield nullFiltered.map(hostConfig.getChapterContent);
+        const currentContents: string[] = yield nullFiltered.map(hostConfig.getChapterContent);
         contents = currentContents.reduce((prev, content) => prev + chapterTemplate({content}), contents); // eslint-disable-line no-loop-func
         // @FIXME (sinewyk): good time for progress tracking ... use Observables instead of Promises
         console.log(`Progress on ${uri}, around chapter ${currentChapter - 1}`); // eslint-disable-line no-console
@@ -50,6 +53,6 @@ function* _main(uri: string, options: any = {}) { // eslint-disable-line spaced-
     return filename;
 }
 
-export default function main(...options) {
+export default function main(...options: any[]) {
     return wrap(_main)(...options);
 }
